@@ -24,13 +24,13 @@ class NoiseBotTwitterClient:
 
     def new_random_tweet(self):
         text = self.bot.speak_random_line()
-        self.api.update_status(text)
+        return self.api.update_status(text)
 
     def reply_tweet(self, tweet):
         tweet_id, username = self._extract_id_and_username(tweet)
         text = self.bot.reply_to(tweet.text)
         tweet_msg = "@{} {}".format(username, text)
-        self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
+        return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
 
     def tweets_with_official_hashtag(self, since_id=None):
         return self._search_tweets(self.OFFICIAL_HASHTAG, since_id)
