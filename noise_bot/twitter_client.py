@@ -5,6 +5,7 @@ from noise_bot.twitter_api import twitter_api
 
 class NoiseBotTwitterClient:
     OFFICIAL_HASHTAG = '#33bienal'
+    TWITTER_ACCOUNT = 'outra33bienal'
 
     def __init__(self, bot):
         self.api = twitter_api
@@ -14,6 +15,12 @@ class NoiseBotTwitterClient:
         tweet_id = tweet.user.id
         username = tweet.user.screen_name
         return tweet_id, username
+
+    def _search_tweets(self, search, since_id=None):
+        kwargs = {}
+        if since_id:
+            kwargs['since_id'] = since_id
+        return Cursor(self.api.search, search, **kwargs).items()
 
     def new_random_tweet(self):
         text = self.bot.speak_random_line()
@@ -25,6 +32,9 @@ class NoiseBotTwitterClient:
         tweet_msg = "@{} {}".format(username, text)
         self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
 
-    def tweets_with_official_hashtag(self):
-        search = self.OFFICIAL_HASHTAG
-        return Cursor(self.api.search, search).items()
+    def tweets_with_official_hashtag(self, since_id=None):
+        return self._search_tweets(self.OFFICIAL_HASHTAG, since_id)
+
+    def mentions(self, since_id=None):
+        search = '@{}'.format(self.TWITTER_ACCOUNT)
+        return self._search_tweets(search, since_id)
