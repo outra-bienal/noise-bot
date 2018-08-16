@@ -1,0 +1,16 @@
+version: "2.0"
+services:
+    noise_bot_database:
+        image: postgres:10.4
+        env_file: .env
+        volumes:
+            - "./srv/docker/postgres/:/var/lib/postgresql/data"
+        ports:
+            - "50101:5432"
+    noise_bot_redis:
+        image: redis:alpine
+        hostname: redis
+        ports:
+            - "50102:6379"
+        volumes:
+            - "./srv/docker/redis/:/data/"
