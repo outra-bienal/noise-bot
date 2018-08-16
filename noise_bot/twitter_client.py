@@ -1,6 +1,6 @@
 from tweepy import Cursor
 
-from noise_bot.twitter_api import twitter_api
+from noise_bot.twitter_api import get_api_connection
 
 
 class NoiseBotTwitterClient:
@@ -8,7 +8,7 @@ class NoiseBotTwitterClient:
     TWITTER_ACCOUNT = 'outra33bienal'
 
     def __init__(self, bot):
-        self.api = twitter_api
+        self.api = get_api_connection()
         self.bot = bot
 
     def _extract_id_and_username(self, tweet):
