@@ -1,6 +1,6 @@
 from tweepy import Cursor
 
-from noise_bot.twitter_api import get_api_connection
+from src.core.noise_bot.twitter_api import get_api_connection
 
 
 class NoiseBotTwitterClient:

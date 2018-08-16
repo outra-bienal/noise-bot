@@ -3,13 +3,13 @@ from tweepy import API
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from noise_bot.bot import NoiseBot
-from noise_bot.twitter_client import NoiseBotTwitterClient
+from src.core.noise_bot.bot import NoiseBot
+from src.core.noise_bot.twitter_client import NoiseBotTwitterClient
 
 
 class NoiseBotTwitterClientTests(TestCase):
 
-    @patch('noise_bot.twitter_client.get_api_connection')
+    @patch('src.core.noise_bot.twitter_client.get_api_connection')
     def setUp(self, mocked_get_api_connection):
         self.api = Mock(API)
         self.bot = Mock(NoiseBot)
