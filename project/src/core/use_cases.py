@@ -19,7 +19,7 @@ def fetch_new_tweets_use_case():
 
     tweets = api_client.mentions(**kwargs)
     for i, tweet in enumerate(tweets):
-        tweet_id, username = extract_id_and_username(tweet)
+        tweet_id, username = extract_id_and_username(tweet)  ## TODO/CHECK acho que o id é só tweet.id mesmo
         ProcessedTweet.objects.get_or_create(
             related_tweet_id=tweet_id,
             defaults={'type': ProcessedTweet.MENTION},

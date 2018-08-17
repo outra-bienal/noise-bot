@@ -50,6 +50,7 @@ class ProcessedTweet(models.Model):
         ordering = ['-created_at']
 
     def update_with_reply(self, reply):
+        ## TODO/CHECK: É assim mesmo que se recupera o ID de um Status (Tweet)?
         self.published_tweet_id = reply.id
         self.status = self.PUBLISHED
         self.save()
