@@ -1,6 +1,7 @@
 from tweepy import Cursor
 
 from src.core.noise_bot.twitter_api import get_api_connection
+from src.core.noise_bot.utils import extract_id_and_username
 
 
 class NoiseBotTwitterClient:
@@ -9,11 +10,6 @@ class NoiseBotTwitterClient:
 
     def __init__(self):
         self.api = get_api_connection()
-
-    def _extract_id_and_username(self, tweet):
-        tweet_id = tweet.user.id
-        username = tweet.user.screen_name
-        return tweet_id, username
 
     def _search_tweets(self, search, since_id=None):
         kwargs = {}
@@ -26,7 +22,7 @@ class NoiseBotTwitterClient:
         return self.api.update_status(text)
 
     def reply_tweet(self, bot, tweet):
-        tweet_id, username = self._extract_id_and_username(tweet)
+        tweet_id, username = extract_id_and_username(tweet)
         text = bot.reply_to(tweet.text)
         tweet_msg = "@{} {}".format(username, text)
         return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
