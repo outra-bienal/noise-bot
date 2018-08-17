@@ -5,16 +5,17 @@ from django.conf import settings
 class RedisAsyncClient(object):
 
     @property
-    def default_queue(self):
-        return django_rq.get_queue('default')
+    def reply_queue(self):
+        return django_rq.get_queue(settings.REPLY_QUEUE)
 
-    def enqueue_default(self, callable, *args, **kwargs):
+    def enqueue_reply(self, callable, *args, **kwargs):
         if settings.TESTING:
             callable(*args, **kwargs)
             return True
         else:
-            return self.default_queue.enqueue(callable,
-                                              args=args, kwargs=kwargs)
+            return self.reply_queue.enqueue(
+                callable, args=args, kwargs=kwargs
+            )
 
 
 class NullableClient(object):
