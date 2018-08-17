@@ -11,12 +11,13 @@ class ProcessedTweetQuerySet(models.QuerySet):
 
 
 class ProcessedTweet(models.Model):
-    NEW, PROCESSING, PUBLISHED = 1, 2, 3
+    NEW, PROCESSING, PUBLISHED, FAILED = 1, 2, 3, 4
     MENTION, HASHTAG = 1, 2
     STATUS = (
         (NEW, 'New'),
         (PROCESSING, 'Processing'),
         (PUBLISHED, 'Published'),
+        (FAILED, 'Failed'),
     )
     TYPES = (
         (MENTION, 'Mention'),
@@ -31,6 +32,7 @@ class ProcessedTweet(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.SmallIntegerField(choices=STATUS, default=NEW)
     type = models.SmallIntegerField(choices=TYPES)
+    reply_job_id = models.CharField(max_length=100, default='')
 
     class Meta:
         ordering = ['-created_at']
