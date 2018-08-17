@@ -9,6 +9,15 @@ class ProcessedTweetQuerySet(models.QuerySet):
         except self.model.DoesNotExist:
             return None
 
+    def new(self):
+        return self.filter(status=self.model.NEW)
+
+    def processing(self):
+        return self.filter(status=self.model.PROCESSING)
+
+    def mentions(self):
+        return self.filter(type=self.model.MENTION)
+
 
 class ProcessedTweet(models.Model):
     NEW, PROCESSING, PUBLISHED, FAILED = 1, 2, 3, 4
@@ -36,3 +45,8 @@ class ProcessedTweet(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    def update_with_reply(self, reply):
+        self.published_tweet_id = reply.id
+        self.status = self.PUBLISHED
+        self.save()
