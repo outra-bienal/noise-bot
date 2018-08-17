@@ -55,3 +55,12 @@ def reply_to_mentions_use_case():
     for processed_tweet in qs:
         _enqueue_reply_task(processed_tweet)
     print('{} replies to mentions were enqueued'.format(qs.count()))
+
+
+@transaction.atomic
+def reply_to_hashtag_use_case():
+    print('Processing new tweets with official hashtag...')
+    qs = ProcessedTweet.objects.new().hashtags().select_for_update()
+    for processed_tweet in qs:
+        _enqueue_reply_task(processed_tweet)
+    print('{} replies to the official hashtag were enqueued'.format(qs.count()))

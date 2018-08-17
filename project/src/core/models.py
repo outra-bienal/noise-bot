@@ -18,6 +18,9 @@ class ProcessedTweetQuerySet(models.QuerySet):
     def mentions(self):
         return self.filter(type=self.model.MENTION)
 
+    def hashtags(self):
+        return self.filter(type=self.model.HASHTAG)
+
 
 class ProcessedTweet(models.Model):
     NEW, PROCESSING, PUBLISHED, FAILED = 1, 2, 3, 4
