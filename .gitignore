@@ -9,3 +9,4 @@
 *.sqlite3
 *.map
 .pytest_cache/
+srv/

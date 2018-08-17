@@ -2,7 +2,7 @@ from tweepy import OAuthHandler, API
 from unittest.mock import patch, Mock
 from decouple import config
 
-from noise_bot.twitter_api import get_api_connection
+from src.core.noise_bot.twitter_api import get_api_connection
 
 CONSUMER_KEY = config('TWITTER_APP_CONSUMER_KEY')
 CONSUMER_SECRET = config('TWITTER_APP_CONSUMER_SECRET')
@@ -10,7 +10,7 @@ ACCESS_TOKEN = config('TWITTER_APP_ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = config('TWITTER_APP_ACCESS_TOKEN_SECRET')
 
 
-@patch('noise_bot.twitter_api.tweepy')
+@patch('src.core.noise_bot.twitter_api.tweepy')
 def test_api_connection(mocked_tweepy):
     auth = mocked_tweepy.OAuthHandler.return_value
     api = mocked_tweepy.API.return_value
