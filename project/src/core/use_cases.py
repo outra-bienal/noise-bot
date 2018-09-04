@@ -13,9 +13,9 @@ def fetch_new_tweets_use_case():
     api_client = NoiseBotTwitterClient()
     kwargs = {}
 
-    most_recent = ProcessedTweet.objects.most_recent()
-    if most_recent:
-        kwargs['since_id'] = most_recent.related_tweet_id
+    last_processed = ProcessedTweet.objects.processed().most_recent()
+    if last_processed:
+        kwargs['since_id'] = last_processed.related_tweet_id
 
     total = 0
     tweets = api_client.mentions(**kwargs)
