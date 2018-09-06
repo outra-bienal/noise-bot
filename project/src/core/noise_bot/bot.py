@@ -31,7 +31,7 @@ class BienalBot:
             return subprocess.check_output(
                 shlex.split(cmd),
                 cwd=settings.CHAR_RNN_DIR
-            ).strip().decode('utf-8')
+            ).strip().decode('utf-8', errors='replace')
         except subprocess.CalledProcessError:
             return ''
 
