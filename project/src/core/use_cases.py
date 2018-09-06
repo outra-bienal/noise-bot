@@ -7,6 +7,18 @@ from src.core.noise_bot.utils import extract_id_and_username
 from src.core.tasks import reply_to_tweet_task
 
 
+def _process_tweets(tweets):
+    total = 0
+    for tweet in tweets:
+        tweet_id, username = extract_id_and_username(tweet)
+        ProcessedTweet.objects.get_or_create(
+            related_tweet_id=tweet_id,
+            defaults={'type': ProcessedTweet.MENTION, 'username': username},
+        )
+        total += 1
+    return total
+
+
 def fetch_new_tweets_use_case():
     print('Fetching new tweets...')
 
@@ -17,15 +29,8 @@ def fetch_new_tweets_use_case():
     if last_processed:
         kwargs['since_id'] = last_processed.related_tweet_id
 
-    total = 0
     tweets = api_client.mentions(**kwargs)
-    for tweet in tweets:
-        tweet_id, username = extract_id_and_username(tweet)
-        ProcessedTweet.objects.get_or_create(
-            related_tweet_id=tweet_id,
-            defaults={'type': ProcessedTweet.MENTION},
-        )
-        total += 1
+    total = _process_tweets(tweets)
     print('\t{} new mentions'.format(total))
 
     kwargs = {}
@@ -33,15 +38,8 @@ def fetch_new_tweets_use_case():
     if last_processed:
         kwargs['since_id'] = last_processed.related_tweet_id
 
-    total = 0
     tweets = api_client.tweets_with_official_hashtag(**kwargs)
-    for tweet in tweets:
-        tweet_id, username = extract_id_and_username(tweet)
-        ProcessedTweet.objects.get_or_create(
-            related_tweet_id=tweet_id,
-            defaults={'type': ProcessedTweet.HASHTAG},
-        )
-        total += 1
+    total = _process_tweets(tweets)
     print('\t{} new tweets with official hashtag'.format(total))
 
 
