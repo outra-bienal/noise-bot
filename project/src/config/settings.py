@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'django_extensions',
+    'scheduler',
     'django_rq',
     'src.core',
 ]
