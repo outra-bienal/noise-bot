@@ -99,6 +99,11 @@ RQ_QUEUES = {
         'DB': 0,
         'DEFAULT_TIMEOUT': 5000,
     },
+    'default': {
+        'URL': REDIS_URL,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 5000,
+    },
 }
 
 
