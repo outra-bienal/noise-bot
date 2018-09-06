@@ -41,6 +41,7 @@ class ProcessedTweet(models.Model):
 
     objects = ProcessedTweetQuerySet.as_manager()
 
+    username = models.CharField(max_length=100, default='')
     related_tweet_id = models.CharField(max_length=100, unique=True, db_index=True)
     published_tweet_id = models.CharField(max_length=100, default='')
     created_at = models.DateTimeField(auto_now_add=True)
