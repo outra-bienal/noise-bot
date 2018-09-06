@@ -13,27 +13,31 @@ def fetch_new_tweets_use_case():
     api_client = NoiseBotTwitterClient()
     kwargs = {}
 
-    most_recent = ProcessedTweet.objects.most_recent()
-    if most_recent:
-        kwargs['since_id'] = most_recent.related_tweet_id
+    last_processed = ProcessedTweet.objects.processed().most_recent()
+    if last_processed:
+        kwargs['since_id'] = last_processed.related_tweet_id
 
+    total = 0
     tweets = api_client.mentions(**kwargs)
-    for i, tweet in enumerate(tweets):
-        tweet_id, username = extract_id_and_username(tweet)  ## TODO/CHECK acho que o id é só tweet.id mesmo
+    for tweet in tweets:
+        tweet_id, username = extract_id_and_username(tweet)
         ProcessedTweet.objects.get_or_create(
             related_tweet_id=tweet_id,
             defaults={'type': ProcessedTweet.MENTION},
         )
-    print('\t{} new mentions'.format(i + 1))
+        total += 1
+    print('\t{} new mentions'.format(total))
 
+    total = 0
     tweets = api_client.tweets_with_official_hashtag(**kwargs)
-    for i, tweet in enumerate(tweets):
+    for tweet in tweets:
         tweet_id, username = extract_id_and_username(tweet)
         ProcessedTweet.objects.get_or_create(
             related_tweet_id=tweet_id,
             defaults={'type': ProcessedTweet.HASHTAG},
         )
-    print('\t{} new tweets with official hashtag'.format(i + 1))
+        total += 1
+    print('\t{} new tweets with official hashtag'.format(total))
 
 
 def _enqueue_reply_task(processed_tweet):

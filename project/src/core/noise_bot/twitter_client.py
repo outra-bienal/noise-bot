@@ -5,7 +5,7 @@ from src.core.noise_bot.utils import extract_id_and_username
 
 
 class NoiseBotTwitterClient:
-    OFFICIAL_HASHTAG = '#33bienal'
+    OFFICIAL_HASHTAGS = ['#blablatexttext', '#textextbla']
     TWITTER_ACCOUNT = 'outra33bienal'
 
     def __init__(self):
@@ -28,7 +28,9 @@ class NoiseBotTwitterClient:
         return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
 
     def tweets_with_official_hashtag(self, since_id=None):
-        return self._search_tweets(self.OFFICIAL_HASHTAG, since_id)
+        for hashtag in self.OFFICIAL_HASHTAGS:
+            for tweet in self._search_tweets(hashtag, since_id):
+                yield tweet
 
     def mentions(self, since_id=None):
         search = '@{}'.format(self.TWITTER_ACCOUNT)

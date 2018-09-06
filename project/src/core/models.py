@@ -12,6 +12,9 @@ class ProcessedTweetQuerySet(models.QuerySet):
     def new(self):
         return self.filter(status=self.model.NEW)
 
+    def processed(self):
+        return self.exclude(published_tweet_id='')
+
     def processing(self):
         return self.filter(status=self.model.PROCESSING)
 
