@@ -11,9 +11,9 @@ def fetch_new_tweets_use_case():
     print('Fetching new tweets...')
 
     api_client = NoiseBotTwitterClient()
-    kwargs = {}
 
-    last_processed = ProcessedTweet.objects.processed().most_recent()
+    kwargs = {}
+    last_processed = ProcessedTweet.objects.mentions().processed().most_recent()
     if last_processed:
         kwargs['since_id'] = last_processed.related_tweet_id
 
@@ -27,6 +27,11 @@ def fetch_new_tweets_use_case():
         )
         total += 1
     print('\t{} new mentions'.format(total))
+
+    kwargs = {}
+    last_processed = ProcessedTweet.objects.hashtags().processed().most_recent()
+    if last_processed:
+        kwargs['since_id'] = last_processed.related_tweet_id
 
     total = 0
     tweets = api_client.tweets_with_official_hashtag(**kwargs)
