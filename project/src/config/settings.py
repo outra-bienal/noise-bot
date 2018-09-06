@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'django_extensions',
+    'scheduler',
     'django_rq',
     'src.core',
 ]
@@ -94,6 +95,11 @@ REDIS_URL = config('REDIS_URL', default='redis://localhost:50102')
 REPLY_QUEUE = 'replies'
 RQ_QUEUES = {
     REPLY_QUEUE: {
+        'URL': REDIS_URL,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 5000,
+    },
+    'default': {
         'URL': REDIS_URL,
         'DB': 0,
         'DEFAULT_TIMEOUT': 5000,

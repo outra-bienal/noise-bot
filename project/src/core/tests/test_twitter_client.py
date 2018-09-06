@@ -37,6 +37,6 @@ class NoiseBotTwitterClientTests(TestCase):
 
         self.bot.reply_to.assert_called_once_with('tweet text')
         self.api.update_status.assert_called_once_with(
-            expected_text, in_reply_to_status_id=42
+            expected_text, in_reply_to_status_id=tweet.id
         )
         assert reply == self.api.update_status.return_value

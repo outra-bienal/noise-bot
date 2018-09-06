@@ -1,3 +1,5 @@
+from django_rq import job
+
 from src.core.models import ProcessedTweet
 from src.core.noise_bot.twitter_client import NoiseBotTwitterClient
 from src.core.noise_bot.bot import NoiseBot
@@ -21,3 +23,21 @@ def reply_to_tweet_task(processed_tweet_id):
         processed_tweet.status = ProcessedTweet.FAILED
         processed_tweet.save()
         raise e
+
+
+@job
+def fetch_new_tweets_task():
+    from src.core.use_cases import fetch_new_tweets_use_case
+    fetch_new_tweets_use_case()
+
+
+@job
+def reply_to_mentions_task():
+    from src.core.use_cases import reply_to_mentions_use_case
+    reply_to_mentions_use_case()
+
+
+@job
+def reply_to_hashtag_task():
+    from src.core.use_cases import reply_to_hashtag_use_case
+    reply_to_hashtag_use_case()

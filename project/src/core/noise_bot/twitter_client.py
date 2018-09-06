@@ -28,9 +28,9 @@ class NoiseBotTwitterClient:
         return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
 
     def tweets_with_official_hashtag(self, since_id=None):
-        for hashtag in self.OFFICIAL_HASHTAGS:
-            for tweet in self._search_tweets(hashtag, since_id):
-                yield tweet
+        q = ' OR '.join(self.OFFICIAL_HASHTAGS)
+        for tweet in self._search_tweets(q, since_id):
+            yield tweet
 
     def mentions(self, since_id=None):
         search = '@{}'.format(self.TWITTER_ACCOUNT)
