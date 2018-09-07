@@ -28,10 +28,7 @@ class NoiseBotTwitterClient:
 
     def reply_tweet(self, bot, tweet):
         tweet_id, username = extract_id_and_username(tweet)
-        tweet_text = clean_text(tweet.text)
-        text = bot.reply_to(tweet_text)
-        if tweet_text in text:
-            text = text.replace(tweet_text, '')
+        text = bot.reply_to(clean_text(tweet.text))
         tweet_msg = "@{} {}".format(username, text)
         return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
 
