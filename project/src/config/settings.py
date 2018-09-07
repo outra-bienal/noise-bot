@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'django_extensions',
+    'scheduler',
     'django_rq',
     'src.core',
 ]
@@ -36,7 +37,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -57,9 +57,9 @@ TEMPLATES = [
     },
 ]
 
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR.child("static")]
-STATICFILES_STORAGE = config('STATICFILES_STORAGE', default='whitenoise.django.GzipManifestStaticFilesStorage')
 
 
 DATABASES = {
@@ -98,6 +98,11 @@ RQ_QUEUES = {
         'DB': 0,
         'DEFAULT_TIMEOUT': 5000,
     },
+    'default': {
+        'URL': REDIS_URL,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 5000,
+    },
 }
 
 
@@ -105,6 +110,12 @@ RQ_QUEUES = {
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Noise Bot Admin',
 }
+
+
+# Char-rnn
+CHAR_RNN_DIR = Path(config('CHAR_RNN_DIR'))
+CHAR_RNN_MODEL = Path(config('CHAR_RNN_MODEL'))
+TORCH_BIN = Path(config('TORCH_BIN'))
 
 import django_heroku
 django_heroku.settings(locals())
