@@ -115,6 +115,7 @@ SUIT_CONFIG = {
 # Char-rnn
 CHAR_RNN_DIR = Path(config('CHAR_RNN_DIR'))
 CHAR_RNN_MODEL = Path(config('CHAR_RNN_MODEL'))
+TORCH_BIN = Path(config('TORCH_BIN'))
 
 import django_heroku
 django_heroku.settings(locals())
