@@ -112,5 +112,10 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'Noise Bot Admin',
 }
 
+
+# Char-rnn
+CHAR_RNN_DIR = Path(config('CHAR_RNN_DIR'))
+CHAR_RNN_MODEL = Path(config('CHAR_RNN_MODEL'))
+
 import django_heroku
 django_heroku.settings(locals())
