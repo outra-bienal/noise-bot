@@ -2,7 +2,7 @@ from django_rq import job
 
 from src.core.models import ProcessedTweet
 from src.core.noise_bot.twitter_client import NoiseBotTwitterClient
-from src.core.noise_bot.bot import NoiseBot
+from src.core.noise_bot.bot import NoiseBot, BienalBot
 
 
 def reply_to_tweet_task(processed_tweet_id):
@@ -11,7 +11,7 @@ def reply_to_tweet_task(processed_tweet_id):
     except ProcessedTweet.DoesNotExist:
         return None
 
-    bot = NoiseBot()
+    bot = BienalBot()
     api_client = NoiseBotTwitterClient()
 
     try:
