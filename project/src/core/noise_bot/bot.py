@@ -37,7 +37,7 @@ class BienalBot:
 
     def speak_random_line(self):
         cmd = ' '.join([
-            'th',
+            settings.TORCH_BIN,
             'sample.lua',
             settings.CHAR_RNN_MODEL,
             '-gpuid',
@@ -53,7 +53,7 @@ class BienalBot:
 
     def reply_to(self, text):
         cmd = ' '.join([
-            'th',
+            settings.TORCH_BIN,
             'sample.lua',
             settings.CHAR_RNN_MODEL,
             '-gpuid',

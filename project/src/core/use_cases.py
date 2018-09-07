@@ -5,6 +5,7 @@ from src.core.models import ProcessedTweet
 from src.core.noise_bot.twitter_client import NoiseBotTwitterClient
 from src.core.noise_bot.utils import extract_id_and_username
 from src.core.tasks import reply_to_tweet_task
+from src.core.noise_bot.bot import BienalBot
 
 
 def _process_tweets(tweets, tweet_type):
@@ -71,3 +72,9 @@ def reply_to_hashtag_use_case():
     for processed_tweet in qs:
         _enqueue_reply_task(processed_tweet)
     print('{} replies to the official hashtag were enqueued'.format(qs.count()))
+
+
+def speak_random_line_use_case():
+    bot = BienalBot()
+    api_client = NoiseBotTwitterClient()
+    api_client.new_random_tweet(bot)
