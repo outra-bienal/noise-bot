@@ -15,3 +15,4 @@ psycopg2-binary==2.7.5
 raven==6.9.0
 tqdm==4.24.0
 django-rq-scheduler==1.1.1
+dj-static==0.0.6
