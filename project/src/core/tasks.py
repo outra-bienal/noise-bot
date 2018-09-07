@@ -41,3 +41,9 @@ def reply_to_mentions_task():
 def reply_to_hashtag_task():
     from src.core.use_cases import reply_to_hashtag_use_case
     reply_to_hashtag_use_case()
+
+
+@job
+def speak_random_line_task():
+    from src.core.use_cases import speak_random_line_use_case
+    speak_random_line_use_case()
