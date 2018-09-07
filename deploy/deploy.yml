@@ -1,0 +1,127 @@
+- hosts: noisebot
+  become: true
+  vars:
+      deps_sistema:
+          - nginx
+          - python3
+          - python3-dev
+          - python3-pip
+          - docker.io
+          - python3-docker
+          - docker-compose
+          - supervisor
+
+  tasks:
+      - name: Instala dependências do sistema
+        apt:
+            name: "{{ item }}"
+            update_cache: yes
+
+        with_items:
+            - "{{ deps_sistema }}"
+
+      - name: Create a login user
+        user:
+           name: noisebot
+           groups:
+               - docker
+           state: present
+
+      - name: Envia código da aplicação para o servidor
+        copy:
+            src: "noisebot.tar.gz"
+            dest: "/tmp/noisebot.tar.gz"
+
+      - name: Cria diretório pro código
+        file:
+            dest: /srv/noisebot
+            state: directory
+
+      - name: Cria diretórios de logs dos serviços
+        file:
+          dest: "/srv/noisebot/srv/logs/"
+          state: directory
+          group: noisebot
+
+      - name: Descompacta código
+        unarchive:
+            src: "/tmp/noisebot.tar.gz"
+            dest: "/srv/noisebot"
+            group: noisebot
+            remote_src: true
+
+      - name: Instala dependências python
+        pip:
+            requirements: "/srv/noisebot/requirements.txt"
+            executable: pip3
+
+      - name: Copia .env para o projeto
+        file:
+            remote_src: true
+            src: "/srv/.env"
+            dest: "/srv/noisebot/project/.env"
+            state: link
+
+      - name: Instala docker-compose via pip
+        pip:
+            name: docker-compose
+            executable: pip3
+
+      - docker_service:
+          project_name: noisebot
+          definition:
+            version: "2.0"
+            services:
+                noise_bot_database:
+                    image: postgres:10.4
+                    environment:
+                      - POSTGRES_DB=noise_bot_db
+                    volumes:
+                        - "/srv/noisebot/srv/docker/postgres/:/var/lib/postgresql/data"
+                    ports:
+                        - "50101:5432"
+                    restart: always
+                noise_bot_redis:
+                    image: redis:alpine
+                    hostname: redis
+                    ports:
+                        - "50102:6379"
+                    volumes:
+                        - "/srv/noisebot/srv/docker/redis/:/data/"
+                    restart: always
+
+      - name: Roda migrações
+        django_manage:
+            command: migrate
+            app_path: /srv/noisebot/project
+
+      - name: Coleta arquivos estáticos
+        django_manage:
+            command: collectstatic
+            app_path: /srv/noisebot/project
+
+      - name: Adiciona configuração do supervisord
+        template:
+            src: templates/app-supervisor.conf
+            dest: /etc/supervisor/conf.d/noisebot.conf
+
+      - name: Adiciona configuração do Nginx
+        template:
+            src: templates/nginx.conf
+            dest: /etc/nginx/sites-available/noisebot.conf
+
+      - name: Ativa o site no Nginx
+        file:
+            src: /etc/nginx/sites-available/noisebot.conf
+            dest: /etc/nginx/sites-enabled/noisebot.conf
+            state: link
+
+      - name: Restart Supervisord
+        service:
+          name: supervisor
+          state: restarted
+
+      - name: Restart Nginx
+        service:
+          name: nginx
+          state: restarted
