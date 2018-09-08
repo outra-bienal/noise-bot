@@ -27,15 +27,10 @@ class NoiseBot:
 class BienalBot:
 
     def run_char_rnn(self, cmd):
-        try:
-            return subprocess.check_output(
-                shlex.split(cmd),
-                cwd=settings.CHAR_RNN_DIR
-            ).strip().decode('utf-8', errors='replace')
-        except subprocess.CalledProcessError:
-            return ''
-        except UnicodeEncodeError:
-            return ''
+        return subprocess.check_output(
+            shlex.split(cmd),
+            cwd=settings.CHAR_RNN_DIR
+        ).strip().decode('utf-8', errors='replace')
 
     def speak_random_line(self):
         cmd = ' '.join([
