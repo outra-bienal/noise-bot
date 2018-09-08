@@ -19,8 +19,8 @@ def reply_to_tweet_task(processed_tweet_id):
         reply = api_client.reply_tweet(bot, tweet)
         processed_tweet.update_with_reply(reply)
     except Exception as e:
-        ## TODO/CHECK: How to handle deleted tweets?
         processed_tweet.status = ProcessedTweet.FAILED
+        processed_tweet.error_message = str(e)
         processed_tweet.save()
         raise e
 

@@ -49,6 +49,7 @@ class ProcessedTweet(models.Model):
     status = models.SmallIntegerField(choices=STATUS, default=NEW)
     type = models.SmallIntegerField(choices=TYPES)
     reply_job_id = models.CharField(max_length=100, default='')
+    error_message = models.TextField(default='')
 
     class Meta:
         ordering = ['-created_at']
