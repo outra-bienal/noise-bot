@@ -34,6 +34,8 @@ class BienalBot:
             ).strip().decode('utf-8', errors='replace')
         except subprocess.CalledProcessError:
             return ''
+        except UnicodeEncodeError:
+            return ''
 
     def speak_random_line(self):
         cmd = ' '.join([
