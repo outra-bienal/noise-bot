@@ -46,7 +46,7 @@ class BienalBot:
             '-seed',
             str(random.choice(range(0, 10000000))),
             '-temperature',
-            '0.2'
+            str(random.uniform(0.6, 0.8))
         ])
         return self.run_char_rnn(cmd)
 
@@ -62,6 +62,8 @@ class BienalBot:
             '-length',
             '200',
             '-primetext',
-            '"{}"'.format(text)
+            '"{}"'.format(text),
+            '-temperature',
+            str(random.uniform(0.7, 0.9))
         ])
         return self.run_char_rnn(cmd)
