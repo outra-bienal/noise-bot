@@ -11,10 +11,10 @@ def clean_text(text):
 
 class NoiseBotTwitterClient:
     OFFICIAL_HASHTAGS = ['#blablatexttext', '#textextbla']
-    TWITTER_ACCOUNT = 'outra33bienal'
 
     def __init__(self):
         self.api = get_api_connection()
+        self.username = '@outra33bienal'
 
     def _search_tweets(self, search, since_id=None):
         kwargs = {}
@@ -31,7 +31,7 @@ class NoiseBotTwitterClient:
         photos = [m for m in tweet.entities.get('media', []) if m.get('type') == 'photo']
 
         kwargs = {}
-        if photos:
+        if photos and self.username in tweet.text:
             glitch = bot.glitch_image(photos[0]['media_url'])
             upload = self.api.media_upload(glitch.name, in_reply_to_status_id=tweet_id, file=glitch)
             tweet_msg = '@{}'.format(username)
