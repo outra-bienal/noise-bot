@@ -2,7 +2,11 @@ import random
 import shlex
 import subprocess
 
+import requests
+
 from django.conf import settings
+from django.core.files.base import ContentFile
+from src.core.noise_bot.jpglitch import random_glitch
 
 
 class NoiseBot:
@@ -25,6 +29,10 @@ class NoiseBot:
 
 
 class BienalBot:
+
+    glitch_functions = [
+        random_glitch
+    ]
 
     def run_char_rnn(self, cmd):
         return subprocess.check_output(
@@ -74,3 +82,15 @@ class BienalBot:
         ])
         line = self.run_char_rnn(cmd).replace(text, '')
         return self.clean_text(line, 0, -1)
+
+    def glitch_image(self, image_url):
+        resp = requests.get(image_url)
+        if not resp.ok:
+            raise Exception('Error {} for "{}" not found'.format(resp.status, image_url))
+
+        func = random.choice(self.glitch_functions)
+        stream = func(resp.content)
+        content_file = ContentFile(stream.read())
+        content_file.name = 'reply.png'
+
+        return content_file
