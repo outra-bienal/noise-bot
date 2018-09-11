@@ -44,7 +44,9 @@ class BienalBot:
             '-length',
             '200',
             '-seed',
-            str(random.choice(range(0, 10000000)))
+            str(random.choice(range(0, 10000000))),
+            '-temperature',
+            '0.2'
         ])
         return self.run_char_rnn(cmd)
 
