@@ -32,6 +32,11 @@ class BienalBot:
             cwd=settings.CHAR_RNN_DIR
         ).strip().decode('utf-8', errors='replace')
 
+    def clean_text(self, text, start, end):
+        words = text.split()[start:end]
+        words[0] = words[0].title()
+        return ' '.join(words)
+
     def speak_random_line(self):
         cmd = ' '.join([
             settings.TORCH_BIN,
@@ -48,7 +53,8 @@ class BienalBot:
             '-temperature',
             str(random.uniform(0.6, 0.8))
         ])
-        return self.run_char_rnn(cmd)
+        line = self.run_char_rnn(cmd)
+        return self.clean_text(line, 1, -1)
 
     def reply_to(self, text):
         cmd = ' '.join([
@@ -66,4 +72,5 @@ class BienalBot:
             '-temperature',
             str(random.uniform(0.7, 0.9))
         ])
-        return self.run_char_rnn(cmd)
+        line = self.run_char_rnn(cmd).replace(text, '')
+        return self.clean_text(line, 0, -1)
