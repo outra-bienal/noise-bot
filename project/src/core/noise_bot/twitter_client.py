@@ -28,9 +28,19 @@ class NoiseBotTwitterClient:
 
     def reply_tweet(self, bot, tweet):
         tweet_id, username = extract_id_and_username(tweet)
-        text = bot.reply_to(clean_text(tweet.text))
-        tweet_msg = "@{} {}".format(username, text)
-        return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id)
+        photos = [m for m in tweet.entities.get('media', []) if m.get('type') == 'photo']
+
+        kwargs = {}
+        if photos:
+            glitch = bot.glitch_image(photos[0]['media_url'])
+            upload = self.api.media_upload(glitch.name, in_reply_to_status_id=tweet_id, file=glitch)
+            tweet_msg = '@{}'.format(username)
+            kwargs['media_ids'] = [upload.media_id]
+        else:
+            text = bot.reply_to(clean_text(tweet.text))
+            tweet_msg = "@{} {}".format(username, text)
+
+        return self.api.update_status(tweet_msg, in_reply_to_status_id=tweet_id, **kwargs)
 
     def tweets_with_official_hashtag(self, since_id=None):
         q = ' OR '.join(self.OFFICIAL_HASHTAGS)
