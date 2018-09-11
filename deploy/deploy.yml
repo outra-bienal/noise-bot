@@ -10,6 +10,11 @@
           - python3-docker
           - docker-compose
           - supervisor
+          - libjpeg-dev
+          - libpng-dev
+          - zlib1g-dev
+          - libtiff-dev
+          - libfreetype6-dev
 
   tasks:
       - name: Instala dependências do sistema
