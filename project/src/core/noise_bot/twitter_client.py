@@ -38,8 +38,7 @@ class NoiseBotTwitterClient:
             yield tweet
 
     def mentions(self, since_id=None):
-        search = '@{}'.format(self.TWITTER_ACCOUNT)
-        return self._search_tweets(search, since_id)
+        return self.api.mentions_timeline()
 
     def get_tweet(self, tweet_id):
         return self.api.get_status(tweet_id)
