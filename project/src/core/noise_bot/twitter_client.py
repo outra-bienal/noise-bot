@@ -10,7 +10,14 @@ def clean_text(text):
 
 
 class NoiseBotTwitterClient:
-    OFFICIAL_HASHTAGS = ['#blablatexttext', '#textextbla']
+    OFFICIAL_HASHTAGS = [
+        '#33bienal',
+        '#afinidadesafetivas',
+        '#bienalsaopaulo',
+        '#bienalsp',
+        '#bienal2018',
+        '#bienaldesaopaulo'
+    ]
 
     def __init__(self):
         self.api = get_api_connection()
