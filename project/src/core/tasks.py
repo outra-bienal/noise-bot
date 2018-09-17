@@ -1,5 +1,7 @@
 from django_rq import job
 
+import traceback
+
 from src.core.models import ProcessedTweet
 from src.core.noise_bot.twitter_client import NoiseBotTwitterClient
 from src.core.noise_bot.bot import NoiseBot, BienalBot
@@ -20,7 +22,9 @@ def reply_to_tweet_task(processed_tweet_id):
         processed_tweet.update_with_reply(reply)
     except Exception as e:
         processed_tweet.status = ProcessedTweet.FAILED
-        processed_tweet.error_message = str(e)
+        content = str(e) + '\n\n'
+        content += ''.join(traceback.format_tb(e.__traceback__))
+        processed_tweet.error_message = content
         processed_tweet.save()
         raise e
 
