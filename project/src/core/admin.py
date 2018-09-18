@@ -5,7 +5,7 @@ from src.core.models import ProcessedTweet
 
 
 class ProcessedTweetAdmin(admin.ModelAdmin):
-    list_display = ['id', 'status', 'type', 'username', 'tweet', 'created_at', 'published_tweet']
+    list_display = ['id', 'status', 'type', 'username_link', 'tweet', 'created_at', 'published_tweet']
     readonly_fields = ['related_tweet_id', 'published_tweet_id', 'created_at', 'updated_at', 'type', 'reply_job_id', 'username', 'error_message']
     list_filter = ['status', 'type', 'created_at']
     search_fields = ['username']
@@ -16,6 +16,11 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
     def tweet(self, obj):
         url = 'https://twitter.com/{}/status/{}'.format(obj.username, obj.related_tweet_id)
         return format_html("<a href='{url}' target='_blank'>Link</a>", url=url)
+    tweet.short_description = "Tweet Original"
+
+    def username_link(self, obj):
+        url = 'https://twitter.com/{}/'.format(obj.username)
+        return format_html("<a href='{url}' target='_blank'>{user}</a>", url=url, user=obj.username)
     tweet.short_description = "Tweet Original"
 
     def published_tweet(self, obj):
