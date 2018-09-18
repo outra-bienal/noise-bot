@@ -19,11 +19,13 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
     tweet.short_description = "Tweet Original"
 
     def published_tweet(self, obj):
+        if obj.error_message:
+            return format_html('<pre><code>{msg}</code></pre>', msg=obj.error_message)
         if not obj.published_tweet_id:
             return ''
         url = 'https://twitter.com/outra33bienal/status/{}'.format(obj.published_tweet_id)
-        return format_html("<a href='{url}' target='_blank'>{url}</a>", url=url)
-    published_tweet.short_description = "Tweet de Resposta"
+        return format_html("<a href='{url}' target='_blank'>Link</a>", url=url)
+    published_tweet.short_description = "Resposta"
 
 
 admin.site.register(ProcessedTweet, ProcessedTweetAdmin)
