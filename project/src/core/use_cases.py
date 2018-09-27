@@ -34,15 +34,6 @@ def fetch_new_tweets_use_case():
     total = _process_tweets(tweets, ProcessedTweet.MENTION)
     print('\t{} new mentions'.format(total))
 
-    kwargs = {}
-    last_processed = ProcessedTweet.objects.hashtags().processed().most_recent()
-    if last_processed:
-        kwargs['since_id'] = last_processed.related_tweet_id
-
-    tweets = api_client.tweets_with_official_hashtag(**kwargs)
-    total = _process_tweets(tweets, ProcessedTweet.HASHTAG)
-    print('\t{} new tweets with official hashtag'.format(total))
-
 
 def _enqueue_reply_task(processed_tweet):
     client = RedisAsyncClient()

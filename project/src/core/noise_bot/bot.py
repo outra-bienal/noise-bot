@@ -28,6 +28,10 @@ class NoiseBot:
         return ''.join(text_as_list)
 
 
+class BotError(Exception):
+    pass
+
+
 class BienalBot:
 
     glitch_functions = [
@@ -35,10 +39,17 @@ class BienalBot:
     ]
 
     def run_char_rnn(self, cmd):
-        return subprocess.check_output(
-            shlex.split(cmd),
-            cwd=settings.CHAR_RNN_DIR
-        ).strip().decode('utf-8', errors='replace')
+        try:
+            return subprocess.check_output(
+                shlex.split(cmd),
+                cwd=settings.CHAR_RNN_DIR
+            ).strip().decode('utf-8', errors='replace')
+        except subprocess.CalledProcessError as exc:
+            ret_code = exc.returncode
+            ret_out = exc.output
+            msg = "Erro com o comando: \n\t{}\n\nRet code {} - Out {}".format(cmd, ret_code, ret_out)
+            raise BotError(msg)
+
 
     def clean_text(self, text, start, end):
         words = text.split()[start:end]

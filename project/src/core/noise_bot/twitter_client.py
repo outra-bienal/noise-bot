@@ -5,8 +5,11 @@ from src.core.noise_bot.utils import extract_id_and_username
 
 
 def clean_text(text):
-    invalid_word = lambda w: w.startswith('#') or w.startswith('@')
-    return ' '.join([w for w in text.split(' ') if not invalid_word(w)])
+    invalid_starts = [
+        '#', '@', 'http://', 'https://'
+    ]
+    invalid_word = lambda w: any(w.startswith(s) for s in invalid_starts)
+    return ' '.join([w for w in text.split(' ') if not invalid_word(w)]).strip()
 
 
 class NoiseBotTwitterClient:
