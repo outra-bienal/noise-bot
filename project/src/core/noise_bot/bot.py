@@ -88,7 +88,7 @@ class BienalBot:
             '-length',
             '200',
             '-primetext',
-            '"{}"'.format(text),
+            shlex.quote(text),
             '-temperature',
             str(random.uniform(0.7, 0.9))
         ])
