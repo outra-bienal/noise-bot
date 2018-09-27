@@ -9,6 +9,7 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
     readonly_fields = ['related_tweet_id', 'published_tweet_id', 'created_at', 'updated_at', 'type', 'reply_job_id', 'username', 'error_message']
     list_filter = ['status', 'type', 'created_at']
     search_fields = ['username']
+    actions = ['mark_as_new']
 
     def has_add_permission(self, request):
         return False
@@ -31,6 +32,9 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
         url = 'https://twitter.com/outra33bienal/status/{}'.format(obj.published_tweet_id)
         return format_html("<a href='{url}' target='_blank'>Link</a>", url=url)
     published_tweet.short_description = "Resposta"
+
+    def mark_as_new(modeladmin, request, queryset):
+        queryset.update(status=ProcessedTweet.NEW)
 
 
 admin.site.register(ProcessedTweet, ProcessedTweetAdmin)
