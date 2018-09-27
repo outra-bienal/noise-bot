@@ -37,6 +37,9 @@ def fetch_new_tweets_use_case():
 
 def _enqueue_reply_task(processed_tweet):
     client = RedisAsyncClient()
+    processed_tweet.error_message = ''
+    processed_tweet.save()
+
     job = client.enqueue_reply(
         reply_to_tweet_task,
         processed_tweet_id=processed_tweet.id
@@ -63,6 +66,14 @@ def reply_to_hashtag_use_case():
     for processed_tweet in qs:
         _enqueue_reply_task(processed_tweet)
     print('{} replies to the official hashtag were enqueued'.format(qs.count()))
+
+
+@transaction.atomic
+def reply_to_queryset(qs):
+    qs.select_for_update()
+    for processed_tweet in qs:
+        _enqueue_reply_task(processed_tweet)
+
 
 
 def speak_random_line_use_case():

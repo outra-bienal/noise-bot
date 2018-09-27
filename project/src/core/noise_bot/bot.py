@@ -76,6 +76,7 @@ class BienalBot:
         return self.clean_text(line, 1, -1)
 
     def reply_to(self, text):
+        text = text.replace('\n', ' ')
         cmd = ' '.join([
             settings.TORCH_BIN,
             'sample.lua',
