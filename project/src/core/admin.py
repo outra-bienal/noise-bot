@@ -9,7 +9,7 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
     readonly_fields = ['related_tweet_id', 'published_tweet_id', 'created_at', 'updated_at', 'type', 'reply_job_id', 'username', 'error_message']
     list_filter = ['status', 'type', 'created_at']
     search_fields = ['username']
-    actions = ['mark_as_new']
+    actions = ['mark_as_new', 'force_reply']
 
     def has_add_permission(self, request):
         return False
@@ -35,6 +35,10 @@ class ProcessedTweetAdmin(admin.ModelAdmin):
 
     def mark_as_new(modeladmin, request, queryset):
         queryset.update(status=ProcessedTweet.NEW)
+
+    def force_reply(modeladmin, request, queryset):
+        from src.core.use_cases import reply_to_queryset
+        reply_to_queryset(queryset)
 
 
 admin.site.register(ProcessedTweet, ProcessedTweetAdmin)
